@@ -44,7 +44,5 @@ for line in data:
         if is_safe(temp_nums):
             sum2 += 1
             break
-        else:
-            pass
 
 print(sum2)
