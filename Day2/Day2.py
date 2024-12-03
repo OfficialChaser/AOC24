@@ -2,21 +2,16 @@ with open("Day2.in", "r") as f:
     data = [i for i in f.readlines()]
 
 def is_safe(nums):
-    decreasing = nums[0] > nums[1]
-    add_to_sum = True
     for i in range(len(nums) - 1):
+        if not(nums == sorted(nums) or nums == sorted(nums, reverse=True)):
+            return False
+        
         diff = abs(nums[i] - nums[i+1])
         if not(0 < diff <= 3):
-            add_to_sum = False
-        if decreasing and nums[i] < nums[i+1]:
-            add_to_sum = False
-        if not decreasing and nums[i] > nums[i+1]:
-            add_to_sum = False
+            return False
     
-    return add_to_sum
+    return True
     
-    
-
 ## PART 1 ##
 sum = 0
 for line in data:
@@ -36,9 +31,7 @@ for line in data:
         
         temp_nums = []
         for j, num in enumerate(nums):
-            if i == j:
-                continue
-            else:
+            if i != j:
                 temp_nums.append(num)
         
         if is_safe(temp_nums):
