@@ -38,7 +38,6 @@ def forward_diagonal_test(line_num, i):
     for j in range(len(word)):
         txt += data[line_num + j][i + j]
 
-    print(txt)
     return is_xmas(txt)
 
 def backward_diagonal_test(line_num, i):
@@ -55,7 +54,7 @@ def backward_diagonal_test(line_num, i):
     return is_xmas(txt)
 
 ## PART 1 ##
-'''sum = 0
+sum = 0
 for line_num, line in enumerate(data):
     for i, char in enumerate(line):
         if char == "X" or char == "S":
@@ -65,7 +64,7 @@ for line_num, line in enumerate(data):
             sum += backward_diagonal_test(line_num, i)
 
 
-print(sum)'''
+print(sum)
 
 ## PART 2 ##
 word = "MAS"
