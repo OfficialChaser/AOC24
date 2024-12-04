@@ -1,51 +1,56 @@
-with open("Day3.in", "r") as f:
-    data = f.readlines()
-    data = data[0]
+def get_data():
+    with open("Day3.in", "r") as f:
+        txt = [i for i in f.read().split("\n")]
+        data = ""
+        for line in txt:
+            data += line
+    return data
 
-sum = 0
-while True:
-    try:
-        index = data.find("mul(")
-        index += 3
-        print("found mul(")
-
-    except Exception:
-        break
-
-    valid_phrase = False
+def get_index_msg(i, data):
     j = 1
     nums = ""
     while True:
-        current_char = data[index + j]
+        current_char = data[i + j]
         if current_char.isnumeric():
             nums += current_char
         elif current_char == ",":
             nums += " "
         elif current_char == ")" and " " in nums:
-            valid_phrase = True
-            break
+            return nums
         else:
-            break
-
+            return ""
         j += 1
-    
-    if valid_phrase:
-        print(nums)
-        a, b = list(map(int, nums.split()))
-        sum += a * b
-        print("found one")
-        if a == 89 and b == 379:
-            break
 
+def modify_data(data):
     indexes_to_remove = []
     for j in range(3):
         indexes_to_remove.append(index + j)
-    
+
     new_data = ""
     for i, char in enumerate(data):
-        if i not in indexes_to_remove:
+        if i >= indexes_to_remove[-1]:
             new_data += char
+    return new_data
 
-    data = new_data    
+
+## PART 1 ##
+data = get_data()
+
+sum = 0
+while True:
+    index = data.find("mul(")
+    if index == -1:
+        break
+
+    index += 3
+
+    nums = get_index_msg(index, data)
+    if nums:
+        a, b = list(map(int, nums.split()))
+        print(f"{a},{b}")
+        sum += a * b
+
+    data = modify_data(data)
 
 print(sum)
+
