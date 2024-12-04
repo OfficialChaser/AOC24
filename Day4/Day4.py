@@ -1,5 +1,5 @@
 with open("Day4.in", "r") as f:
-    data = [i for i in f.readlines()]
+    data = [i for i in f.read().split("\n")]
 
 word = "XMAS"
 
@@ -30,9 +30,8 @@ def forward_diagonal_test(line_num, i):
     if line_num + len(word) - 1 >= len(data):
         return False
     
-    if i + len(word) - 1 >= len(data[0].strip('\n')):
+    if i + len(word) - 1 >= len(data[0]):
         return False
-    
     
     txt = ""
     for j in range(len(word)):
@@ -57,12 +56,13 @@ def backward_diagonal_test(line_num, i):
 sum = 0
 for line_num, line in enumerate(data):
     for i, char in enumerate(line):
-        if char == "X" or char == "S":
-            sum += horiz_test(line, i)
-            sum += vertical_test(line_num, i)
-            sum += forward_diagonal_test(line_num, i)
-            sum += backward_diagonal_test(line_num, i)
+        if not(char == "X" or char == "S"):
+            continue
 
+        sum += horiz_test(line, i)
+        sum += vertical_test(line_num, i)
+        sum += forward_diagonal_test(line_num, i)
+        sum += backward_diagonal_test(line_num, i)
 
 print(sum)
 
