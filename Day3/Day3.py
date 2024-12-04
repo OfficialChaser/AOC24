@@ -32,9 +32,6 @@ def modify_data(index):
             new_data += char
     return new_data
 
-def check_enabled_status(mul_index, do_index, dont_index):
-    pass
-
 
 ## PART 1 ##
 data = get_data()
