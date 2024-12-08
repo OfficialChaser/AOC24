@@ -1,81 +1,89 @@
+def find_start_pos(grid):
+    for row_num, row in enumerate(grid):
+        if row.find("^") != -1:
+            return [row.index("^"), row_num]
+
+def handle_rotation(added_obstacle=[None, None]):
+    if y + direction[1] < 0 or x + direction[0] < 0:
+        raise IndexError
+    elif grid[y + direction[1]][x + direction[0]] == "#" or [x + direction[0], y + direction[1]] == added_obstacle:
+        return [-direction[1], direction[0]] # 90 degree rot
+    return direction
+
+def is_new_pos(pos, include_dir=False):
+    if include_dir:
+        pass
+    elif pos not in traveled_locs:
+        traveled_locs.append(pos)
+        return True
+    return False
+
+## PART 1 ##
 with open("Day6.in", "r") as f:
     grid = [i for i in f.read().split("\n")]
 
-pos = []
+# Get guard location
+pos = find_start_pos(grid)
 
-for row_num, row in enumerate(grid):
-    if row.find("^") != -1:
-        pos = [row.index("^"), row_num]
-
+# Initialize position, list, direction
 start_pos = pos
-
-## PART 1 ##
-in_bounds = True
-direction = [0, -1]
 traveled_locs = []
-unique_locs_traveled = 0
 traveled_locs.append(start_pos)
-'''
+direction = [0, -1]
+
+# Tracker variables
+sum = 0
+in_bounds = True
+
 while in_bounds:
-    x = pos[0]
-    y = pos[1]
-    print(pos)
+    x, y = pos
     try:
-        print(grid[y + direction[1]][x + direction[0]])
-        if grid[y + direction[1]][x + direction[0]] == "#":
-            direction = [-direction[1], direction[0]] # 90 degree rot
-            continue
+        direction = handle_rotation()
 
     except IndexError:
         in_bounds = False
-    
+
     pos = [x + direction[0], y + direction[1]]
-    if pos not in traveled_locs:
-        traveled_locs.append(pos)
-        unique_locs_traveled += 1
+    sum += is_new_pos(pos)
 
-print(unique_locs_traveled)'''
 
+print(sum)
 
 ## PART 2 ##
-solutions = 0
-visited_states = []
-for r, row in enumerate(grid):
-    print(f"Started row: {r}")
-    for c, char in enumerate(row):
-        with open("Day6.in", "r") as f:
-            grid = [i for i in f.read().split("\n")]
-        if char == "#":
-            continue
+orientations = []
+
+sum2 = 0
+progress = 0
+
+solutions = []
+for r, c in traveled_locs:
+    print(f"{progress}/{len(traveled_locs)}")
+
+    # Initialize Variables
+    pos = start_pos
+    direction = [0, -1]
+    orientations.clear()
+    in_bounds = True
+
+    while in_bounds:
+        orientation = [pos, direction]
+
+        if orientation not in orientations:
+            orientations.append(orientation)
         else:
-            steps_taken = 0
-            pos = start_pos
-            direction = [0, -1]
-            grid[r] = grid[r][:c] + "#" + grid[r][c + 1:]
-            visited_states.clear()
-            looped = False
-        while True:
-            x = pos[0]
-            y = pos[1]
+            solutions.append([c, r])
+            sum2 += 1
+            in_bounds = False
 
-            try:
-                if grid[y + direction[1]][x + direction[0]] == "#":
-                    direction = [-direction[1], direction[0]]
-                    continue
+        x, y = pos
+        try:
+            direction = handle_rotation([c, r])
+            
 
-            except IndexError:
-                break
-            
-            pos = [x + direction[0], y + direction[1]]
-            steps_taken += 1
-            if [pos, direction] not in visited_states:
-                visited_states.append([pos, direction])
-            else:
-                solutions += 1
-                break
-            
-            if steps_taken >= 10000:
-                break
-                
-            
-print(solutions)
+        except IndexError:
+            in_bounds = False
+
+        pos = [x + direction[0], y + direction[1]]
+    progress += 1
+
+print(sum2)
